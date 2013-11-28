@@ -3,30 +3,53 @@ header("Content-Type:text/xml");
 $msgData = json_decode($_POST['data'],true);
 
 class Weixin{
-    public function __construct($param){
-        $this->url = $param['url'];
-        $this->token = $param['token'];
-        $this->toUser = $param['toUser'];
-        $this->fromUser = $param['fromUser'];
+    public function __construct($data){
+        $this->url = $data['url'];
+        $this->token = $data['token'];
+        $this->toUser = $data['toUser'];
+        $this->fromUser = $data['fromUser'];
+        $this->msgType = $data['msgType'];
+        $this->info = $data['info'];
     }
 
-    private function makeMsg($data){    
+    private function makeMsg(){    
+        $info = $this->info;
         $header = "<xml>
                     <ToUserName><![CDATA[".$this->toUser."]]></ToUserName>
                     <FromUserName><![CDATA[".$this->fromUser."]]></FromUserName>
                     <CreateTime>".time()."</CreateTime>
-                    <MsgType><![CDATA[".$data['msgType']."]]></MsgType>";
-        switch( $data['msgType'] ){
+                    <MsgType><![CDATA[".$info['MsgType']."]]></MsgType>";
+        switch( $info['MsgType'] ){
             case 'text':
-                $content = "<Content><![CDATA[".$data['content']."]]></Content>";
+                $content = "<Content><![CDATA[".$info['Content']."]]></Content>";
                 break;
+            case 'location':
+                $content = "<Location_X><![CDATA[".$info['Location_X']."]]></Location_X>";
+                $content .= "<Location_Y><![CDATA[".$info['Location_Y']."]]></Location_Y>";
+                break;
+            case 'event':
+                $content = "<Event><![CDATA[".$info['Event']."]]></Event>";
+                if( isset($info['Latitude']) && $info['Latitude'] !== "" ){
+                    $content .= "<Latitude><![CDATA[".$info['Latitude']."]]></Latitude>";
+                }
+                if( isset($info['Longitude']) && $info['Longitude'] !== "" ){
+                    $content .= "<Longitude><![CDATA[".$info['Longitude']."]]></Longitude>";
+                }
+                if( isset($info['EventKey']) && $info['EventKey'] !== "" ){
+                    $content .= "<EventKey><![CDATA[".$info['EventKey']."]]></EventKey>";
+                }
+                if( isset($info['Ticket']) && $info['Ticket'] !== "" ){
+                    $content .= "<Ticket><![CDATA[".$info['Ticket']."]]></Ticket>";
+                }
+                break;
+
         }
         $footer = "<MsgId>1234567890123456</MsgId>
                     </xml>";
         return $header . $content . $footer;
     }
-    public function send($data){
-        $rst = $this->makeMsg($data);
+    public function send(){
+        $rst = $this->makeMsg();
 
         $curl = curl_init(); // 启动一个CURL会话      
         curl_setopt($curl, CURLOPT_URL, $this->url); // 要访问的地址                  
@@ -43,9 +66,8 @@ class Weixin{
     }
 }
 
-$Wx = new Weixin( $msgData['param'] );
-$rst = $Wx->send( $msgData['info'] );
-
+$Wx = new Weixin( $msgData );
+$rst = $Wx->send();
 echo $rst;
 
 ?>

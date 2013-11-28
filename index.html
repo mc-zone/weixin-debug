@@ -131,8 +131,7 @@
                                         文本 
                                     </label>
                                 </div>
-                                <!--
-                                 <div class="radio-inline">
+                                <div class="radio-inline">
                                     <label>
                                         <input id="" type="radio" name="msg-type" value="subscribe">
                                         订阅事件
@@ -144,7 +143,6 @@
                                         位置 
                                     </label>
                                 </div>
-                                -->
                             </td>
                         </tr>
                         <tr>
@@ -153,10 +151,18 @@
                             </td>
                             <td>
                                 <form class="form-inline" action="" role="form">
-                                    <div class="form-group">
-                                        <label for="userName">用户名:</label>
-                                        <input type="text" class="inline-input form-control" id="user-name" placeholder="User Name">
-                                    </div>
+                                        <div class="form-group">
+                                            <label for="userName">用户名:</label>
+                                            <input type="text" class="inline-input form-control" id="user-name" placeholder="User Name">
+                                        </div>
+                                        <div class="form-group location">
+                                            <label for="location-x">经度:</label>
+                                            <input type="text" class="inline-input form-control" id="location-x" placeholder="Longitude">
+                                        </div>
+                                        <div class="form-group location">
+                                            <label for="location-y">纬度:</label>
+                                            <input type="text" class="inline-input form-control" id="location-y" placeholder="Latitude">
+                                        </div>
                                 </form>
                             </td>
                         </tr>
@@ -222,28 +228,49 @@
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
 
-<script type="text/javascript" src="action.js"></script>
-<script type="text/javascript">
-var Wx = new Weixin();
-$(function(){
-    $("#send").click(function(){
-        var $btn = $(this);
-        Wx.send(function(){
-                $btn.addClass('disabled').text("等待..");
-            }
-            ,function(){
-                $btn.removeClass('disabled').text(" 发 送 ");
+        <script type="text/javascript" src="action.js"></script>
+        <script type="text/javascript">
+            var Wx = new Weixin();
+            $(function(){
+                    var $radio = $("input[type=radio][name=msg-type]");
+                    var typeSwitch = function(type){
+                        switch(type){
+                        case 'text':
+                        $("#content").removeAttr("disabled");
+                        $(".location").hide();
+                        break;
+                        case 'subscribe':
+                        $("#content").attr("disabled","disabled");
+                        $(".location").hide();
+                        break;
+                        case 'location':
+                        $("#content").attr("disabled","disabled");
+                        $(".location").show();
+                        break;
+                        }
+                    };
+                    $radio.change(function(){
+                        typeSwitch($(this).val());
+                        });
+                    $("#send").click(function(){
+                        var $btn = $(this);
+                        Wx.send(function(){
+                            $btn.addClass('disabled').text("等待..");
+                            }
+                            ,function(){
+                            $btn.removeClass('disabled').text(" 发 送 ");
+                            });
+                        });
+
+                    $("form").each(function(){
+                            $(this).submit(function(event){
+                                event.preventDefault();
+                                });
+                            });
+
+                    typeSwitch('text');
             });
-        });
 
-    $("form").each(function(){
-            $(this).submit(function(event){
-                event.preventDefault();
-            });
-        });
-
-});
-
-</script>
-            </body>
-        </html>
+        </script>
+    </body>
+</html>

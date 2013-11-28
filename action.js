@@ -1,29 +1,73 @@
 var Weixin = (function($){
-    var WeixinClass = function(){
+    var WeixinClass = function(){//{{{
         this.verify = {
             url:/^(([A-Za-z]+):)(\/{0,3})([0-9.\-A-Za-z]+)(:(\d+))?(\/([^?#]*))?(\?([^#]*))?(#(.*))?$/
+            ,locality:/^\d+(.\d*)?$/
         };       
         this.modal = $("#myModal");
         this.msgCnt = 0;
-    };
+        this.url = null;
+        this.type = "";
+    };//}}}
     
-    WeixinClass.prototype.dataIncomplete = function(name){//{{{
+    WeixinClass.prototype.dataIncomplete = function(name,id){//{{{
         this.modal.find(".modal-body h3").text(name+"格式不正确！请填写正确的"+name);
         this.modal.modal();
+        $("#"+id).focus();
     };//}}}
 
     WeixinClass.prototype.setSendData = function(){//根据选择设定消息//{{{
         var url = $("#url").val();
-        if( url == "" || !this.verify.url.test(url) ){
-            this.dataIncomplete('url');
-            return false;
+        if( url !== this.url ){
+            if( url == "" || !this.verify.url.test(url) ){
+                this.dataIncomplete('url','url');
+                return false;
+            }else{
+                this.url = url;
+            }
         }
-        this.url = url;
-        this.token = $("#token").val();
-        this.userName = ($("#user-name").val()==""?"Me":$("#user-name").val());
-        this.serverName = 'Server';
-        this.msgType = $("input[type='radio'][name='msg-type']:checked").val(); 
-        return true;
+
+        var sendData = { 
+               url : this.url
+              ,token : $("#token").val() 
+              ,toUser : 'Server'
+              ,fromUser : $("#user-name").val()==""?"Me":$("#user-name").val()
+              ,info :{}
+        };
+        this.type = $("input[type='radio'][name='msg-type']:checked").val();
+
+        switch( this.type ){
+            case 'text':
+                var text = $("#content").val();
+                if( text == "" ){
+                    this.dataIncomplete('信息','content');
+                    return false;
+                }else{
+                    sendData.info.MsgType = 'text'; 
+                    sendData.info.Content = text;
+                }
+                break;
+            case 'location':
+                var x = $("#location-x").val(),
+                    y = $("#location-y").val();
+                if( x == "" || !this.verify.locality.test(x) ){
+                    this.dataIncomplete('经度数字','location-x');
+                    return false;
+                }else if( y == "" || !this.verify.locality.test(y) ){
+                    this.dataIncomplete('纬度数字','location-y');
+                    return false;
+                }else{
+                    sendData.info.MsgType = 'location'; 
+                    sendData.info.Location_X = x;
+                    sendData.info.Location_Y = y;
+                }
+                break;
+            case 'subscribe':
+                    sendData.info.MsgType = 'event'; 
+                    sendData.info.Event = 'subscribe';
+                break;
+        }
+        return sendData;
     };//}}}
 
     WeixinClass.prototype.loadXml = function($xmlDoc,key){//{{{
@@ -97,27 +141,19 @@ var Weixin = (function($){
     };//}}}
 
     WeixinClass.prototype.send = function( before,callback ){//发送信息//{{{
-        if( !this.setSendData() ) return false;
+        var sendData = this.setSendData();
+        if( sendData === false ) return false;
 
-        var sendData = { 
-            param:{ 
-                      url : this.url 
-                      ,token : this.token 
-                      ,toUser : this.serverName
-                      ,fromUser : this.userName
-                  }
-            ,info:{
-                     msgType : this.msgType 
-                 }
-        };
-
-        switch(this.msgType){
+        switch( this.type ){
             case 'text':
-                var text = $("#content").val();
-                sendData.info.content = text;
-                this.pushMsgText(text,this.userName,true);
+                this.pushMsgText(sendData.info.Content,sendData.fromUser,true);
                 break;
-                //extend here
+            case 'subscribe':
+                this.pushMsgText('已推送模拟订阅事件',sendData.fromUser,true);
+                break;
+            case 'location':
+                this.pushMsgText('已发送地址信息',sendData.fromUser,true);
+                break;
         }
 
         var that = this;
