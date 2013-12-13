@@ -30,7 +30,7 @@ var Weixin = (function($){
         var sendData = { 
                url : this.url
               ,token : $("#token").val() 
-              ,toUser : 'Server'
+              ,toUser : $("#openID").val()!=""?$("#openID").val():'Server'
               ,fromUser : $("#user-name").val()==""?"Me":$("#user-name").val()
               ,info :{}
         };
@@ -66,7 +66,7 @@ var Weixin = (function($){
                     sendData.info.MsgType = 'event'; 
                     sendData.info.Event = 'subscribe';
                 break;
-        }
+         }
         return sendData;
     };//}}}
 
@@ -162,7 +162,9 @@ var Weixin = (function($){
             type:'POST',
             dataType:'xml',
             data:{data:JSON.stringify(sendData)},
-            beforeSend:before,
+            beforeSend:function(){
+                before();
+            },
             success:function(data,statu,jqXHR){//数据合理时(限定于XML)进行的处理
                 that.getResponse(data);
                 that.pushInfo(statu,jqXHR);//推送详细信息

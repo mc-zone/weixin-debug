@@ -14,11 +14,6 @@ class Weixin{
 
     private function makeMsg(){    
         $info = $this->info;
-        $header = "<xml>
-                    <ToUserName><![CDATA[".$this->toUser."]]></ToUserName>
-                    <FromUserName><![CDATA[".$this->fromUser."]]></FromUserName>
-                    <CreateTime>".time()."</CreateTime>
-                    <MsgType><![CDATA[".$info['MsgType']."]]></MsgType>";
         switch( $info['MsgType'] ){
             case 'text':
                 $content = "<Content><![CDATA[".$info['Content']."]]></Content>";
@@ -44,6 +39,12 @@ class Weixin{
                 break;
 
         }
+        $header = "<xml>
+                    <ToUserName><![CDATA[".$this->toUser."]]></ToUserName>
+                    <FromUserName><![CDATA[".$this->fromUser."]]></FromUserName>
+                    <CreateTime>".time()."</CreateTime>
+                    <MsgType><![CDATA[".$info['MsgType']."]]></MsgType>";
+
         $footer = "<MsgId>1234567890123456</MsgId>
                     </xml>";
         return $header . $content . $footer;
