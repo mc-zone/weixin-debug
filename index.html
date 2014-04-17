@@ -3,9 +3,9 @@
     <head>
         <meta charset="UTF-8">
         <title>微信公众平台调试工具</title>
-        <link href="http://cdn.bootcss.com/twitter-bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
-        <script type="text/javascript" src="http://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
-        <script type="text/javascript" src="http://cdn.staticfile.org/twitter-bootstrap/3.0.2/js/bootstrap.min.js"></script>
+        <link href="resource/bootstrap.min.css" rel="stylesheet">
+        <script type="text/javascript" src="resource/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="resource/bootstrap.min.js"></script>
         <style type="text/css">
             body{font-size:12px;font-family:'微软雅黑';}
             #msg-area{
@@ -147,6 +147,18 @@
                                         位置 
                                     </label>
                                 </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input id="" type="radio" name="msg-type" value="click">
+                                        click事件 
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input id="" type="radio" name="msg-type" value="voice">
+                                        语音识别
+                                    </label>
+                                </div>
                             </td>
                         </tr>
                         <tr>
@@ -166,6 +178,15 @@
                                         <div class="form-group location">
                                             <label for="location-y">纬度:</label>
                                             <input type="text" class="inline-input form-control" id="location-y" placeholder="Latitude">
+                                        </div>
+                                        <div class="form-group click">
+                                            <label for="event-key">EventKey:</label>
+                                            <input type="text" class="inline-input form-control" id="event-key" placeholder="EventKey">
+                                        </div>
+
+                                        <div class="form-group reco">
+                                            <label for="Recognition">Recognition:</label>
+                                            <input type="text" class="inline-input form-control" id="Recognition" placeholder="Recognition">
                                         </div>
                                 </form>
                             </td>
@@ -242,14 +263,32 @@
                         case 'text':
                         $("#content").removeAttr("disabled");
                         $(".location").hide();
+                        $(".click").hide();
+                        $(".reco").hide();
                         break;
                         case 'subscribe':
                         $("#content").attr("disabled","disabled");
                         $(".location").hide();
+                        $(".click").hide();
+                        $(".reco").hide();
                         break;
                         case 'location':
                         $("#content").attr("disabled","disabled");
                         $(".location").show();
+                        $(".click").hide();
+                        $(".reco").hide();
+                        break;
+                        case 'click':
+                        $("#content").attr("disabled","disabled");
+                        $(".location").hide();
+                        $(".click").show();
+                        $(".reco").hide();
+                        break;
+                        case 'voice':
+                        $("#content").attr("disabled","disabled");
+                        $(".location").hide();
+                        $(".click").hide();
+                        $(".reco").show();
                         break;
                         }
                     };

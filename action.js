@@ -66,12 +66,29 @@ var Weixin = (function($){
                     sendData.info.MsgType = 'event'; 
                     sendData.info.Event = 'subscribe';
                 break;
+            case 'click':
+                    sendData.info.MsgType = 'event'; 
+                    sendData.info.Event = 'CLICK';
+                    sendData.info.EventKey = $("#event-key").val();
+                break;
+            case 'voice':
+                var reco = $("#Recognition").val();
+                if( reco == "" ){
+                    this.dataIncomplete('Recognition','reco');
+                    return false;
+                }else{
+                    sendData.info.MsgType = 'voice'; 
+                    sendData.info.Recognition = reco;
+                }
+                break;
          }
         return sendData;
     };//}}}
 
     WeixinClass.prototype.loadXml = function($xmlDoc,key){//{{{
-        return $xmlDoc.find(key).text();
+        
+        var a = $xmlDoc.last().find(key).text();
+        return a;
     };//}}}
     
     WeixinClass.prototype.htmlEncode = function(s){//{{{
@@ -153,6 +170,9 @@ var Weixin = (function($){
                 break;
             case 'location':
                 this.pushMsgText('已发送地址信息',sendData.fromUser,true);
+                break;
+            case 'voice':
+                this.pushMsgText('已发送语音格式信息',sendData.fromUser,true);
                 break;
         }
 

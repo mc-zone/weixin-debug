@@ -8,7 +8,6 @@ class Weixin{
         $this->token = $data['token'];
         $this->toUser = $data['toUser'];
         $this->fromUser = $data['fromUser'];
-        $this->msgType = $data['msgType'];
         $this->info = $data['info'];
     }
 
@@ -21,6 +20,13 @@ class Weixin{
             case 'location':
                 $content = "<Location_X><![CDATA[".$info['Location_X']."]]></Location_X>";
                 $content .= "<Location_Y><![CDATA[".$info['Location_Y']."]]></Location_Y>";
+                break;
+            case 'voice':
+                $info['Format'] = 'amr';
+                $info['MediaId'] = '1';
+                $content = "<Recognition><![CDATA[".$info['Recognition']."]]></Recognition>";
+                $content .= "<Format><![CDATA[".$info['Format']."]]></Format>";
+                $content .= "<MediaId><![CDATA[".$info['MediaId']."]]></MediaId>";
                 break;
             case 'event':
                 $content = "<Event><![CDATA[".$info['Event']."]]></Event>";
@@ -63,7 +69,9 @@ class Weixin{
         curl_setopt($curl, CURLOPT_TIMEOUT, 30); // 设置超时限制防止死循环      
         $tmpInfo = curl_exec($curl); // 执行操作      
         curl_close($curl); // 关键CURL会话      
+        $tmpInfo = str_replace('<?xml version="1.0"?>','',$tmpInfo);
         return $tmpInfo; // 返回数据     
+
     }
 }
 
