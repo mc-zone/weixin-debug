@@ -1,0 +1,137 @@
+body{font-size:12px;font-family:'微软雅黑';}
+#msg-area{
+    position:relative;
+    width:95%;
+    height:450px;
+    margin-top:10px;
+    margin-bottom:10px;
+    overflow-x:hidden;
+    overflow-y:scroll;
+    border:1px #ccc solid;
+    border-radius:4px;
+}
+#msg-inner{
+    width:100%;
+    height:auto;
+    padding:20px 5px 0 5px;
+    overflow:hidden;
+    position:relative;
+}
+.msg-content{
+    min-width:20%;
+    max-width:60%;
+    color:#666;
+}
+#msg-inner span.label{
+    max-width:80px;
+    min-width:2%;
+}
+.msg-wrapper-self{
+    width:100%;
+    clear:both;
+}
+.msg-wrapper-self .msg-content{
+    float:right;
+}
+.msg-wrapper-self span.label{
+    float:right;
+    margin-left:10px;
+}
+.msg-wrapper-server{
+    width:100%;
+    padding-left:30px;
+    clear:both;
+}
+.msg-wrapper-server .msg-content{
+    float:left;
+}
+.msg-wrapper-server span.label{
+    float:left;
+    margin-right:10px;
+}
+.msg-wrapper-server .news-content{
+    width:390px;
+}
+.msg-wrapper-server .news-content .news-single img,
+.msg-wrapper-server .news-content .news-muti .panel-body img{
+    width:360px;
+    height:200px;
+    display:block;
+    margin:auto;
+}
+.msg-wrapper-server .news-content .news-single a,
+.msg-wrapper-server .news-content .news-muti a{
+    text-decoration:none;
+    color:#666;
+}
+
+.msg-wrapper-server .news-content .news-muti .panel-body {
+    padding:15px 10px;
+}
+.msg-wrapper-server .news-content .news-muti .panel-body p{
+    width:360px;
+    height:20px;
+    margin:-20px auto 0;
+    line-height:20px;
+    background:#333;
+    opacity:0.6;
+    color:#fff;
+    text-indent:5px;
+}
+.msg-wrapper-server .news-content .news-muti .list-group .list-group-item{
+    height:60px;
+    padding-top:5px;
+    padding-bottom:5px;
+    text-indent:3px;
+}
+
+.msg-wrapper-server .news-content .news-muti .list-group p{
+    float:left;
+    width:70%;
+    height:50px;
+    line-height:50px;
+    margin:0;
+}
+.msg-wrapper-server .news-content .news-muti .list-group img{
+    float:right;
+    width:50px;
+    height:50px;
+}
+
+.msg-info-title{
+    float:left;
+    width:auto;
+    overflow:hidden;
+    max-width:35%;
+    height:30px;
+    position:relative;
+}
+.msg-info-show{
+    float:right;
+    margin-right:15px;
+}
+#accordion{
+    width:100%;
+    position:relative;
+}
+#accordion .panel-heading{
+    height:auto;
+    overflow:hidden;
+}
+#accordion .panel-body{
+    position:relative;
+    width:100%;
+}
+#accordion .panel-body-inner-wrapper{
+    width:100%;
+    height:auto;
+    min-height:240px;
+    overflow:auto;
+    position:relative;
+}
+#accordion .panel-body-inner{
+    width:auto;
+    overflow:hidden;
+    position:absolute;
+}
+

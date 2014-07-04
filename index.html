@@ -4,96 +4,7 @@
         <meta charset="UTF-8">
         <title>微信公众平台调试工具</title>
         <link href="resource/bootstrap.min.css" rel="stylesheet">
-        <script type="text/javascript" src="resource/jquery-1.9.1.min.js"></script>
-        <script type="text/javascript" src="resource/bootstrap.min.js"></script>
-        <style type="text/css">
-            body{font-size:12px;font-family:'微软雅黑';}
-            #msg-area{
-                position:relative;
-                width:95%;
-                height:350px;
-                margin-top:10px;
-                margin-bottom:10px;
-                overflow-x:hidden;
-                overflow-y:scroll;
-                border:1px #ccc solid;
-                border-radius:4px;
-            }
-            #msg-inner{
-                width:100%;
-                height:auto;
-                padding:20px 5px 0 5px;
-                overflow:hidden;
-                position:relative;
-            }
-            .msg-content{
-                min-width:20%;
-                max-width:60%;
-                color:#666;
-            }
-            #msg-inner span.label{
-                max-width:8%;
-                min-width:2%;
-            }
-            .msg-wrapper-self{
-                width:100%;
-                clear:both;
-            }
-            .msg-wrapper-self .msg-content{
-                float:right;
-            }
-            .msg-wrapper-self span.label{
-                float:right;
-                margin-left:10px;
-            }
-            .msg-wrapper-server{
-                width:100%;
-                clear:both;
-            }
-            .msg-wrapper-server .msg-content{
-                float:left;
-            }
-            .msg-wrapper-server span.label{
-                float:left;
-                margin-right:10px;
-            }
-            .msg-info-title{
-                float:left;
-                width:auto;
-                overflow:hidden;
-                max-width:35%;
-                height:30px;
-                position:relative;
-            }
-            .msg-info-show{
-                float:right;
-                margin-right:15px;
-            }
-            #accordion{
-                width:100%;
-                position:relative;
-            }
-            #accordion .panel-heading{
-                height:auto;
-                overflow:hidden;
-            }
-            #accordion .panel-body{
-                position:relative;
-                width:100%;
-            }
-            #accordion .panel-body-inner-wrapper{
-                width:100%;
-                height:auto;
-                min-height:240px;
-                overflow:auto;
-                position:relative;
-            }
-            #accordion .panel-body-inner{
-                width:auto;
-                overflow:hidden;
-                position:absolute;
-            }
-        </style>
+        <link href="css/style.css" rel="stylesheet">
     </head>
     <body>
         <div class="container">
@@ -253,10 +164,25 @@
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
 
-        <script type="text/javascript" src="action.js"></script>
+        <script type="text/javascript" src="resource/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="resource/bootstrap.min.js"></script>
+        <script type="text/javascript" src="resource/jquery.cookie.js"></script>
+        <script type="text/javascript" src="js/application.js"></script>
         <script type="text/javascript">
             var Wx = new Weixin();
             $(function(){
+                    $("input[type='text']").each(function(){
+                        var $this = $(this); 
+                        var name = $this.attr('id') || $this.attr('name') || $this.index('input');
+                        if( $this.val() == "" ){
+                            $this.val( $.cookie(name) );
+                        }
+
+                        $this.change(function(){
+                            $.cookie(name,$(this).val());
+                        });
+                    });
+
                     var $radio = $("input[type=radio][name=msg-type]");
                     var typeSwitch = function(type){
                         switch(type){

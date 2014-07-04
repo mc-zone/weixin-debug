@@ -1,5 +1,5 @@
 var Weixin = (function($){
-    var WeixinClass = function(){//{{{
+    var WeixinClass = function(){
         this.verify = {
             url:/^(([A-Za-z]+):)(\/{0,3})([0-9.\-A-Za-z]+)(:(\d+))?(\/([^?#]*))?(\?([^#]*))?(#(.*))?$/
             ,locality:/^\d+(.\d*)?$/
@@ -8,15 +8,15 @@ var Weixin = (function($){
         this.msgCnt = 0;
         this.url = null;
         this.type = "";
-    };//}}}
+    };
     
-    WeixinClass.prototype.dataIncomplete = function(name,id){//{{{
+    WeixinClass.prototype.dataIncomplete = function(name,id){
         this.modal.find(".modal-body h3").text(name+"格式不正确！请填写正确的"+name);
         this.modal.modal();
         $("#"+id).focus();
-    };//}}}
+    };
 
-    WeixinClass.prototype.setSendData = function(){//根据选择设定消息//{{{
+    WeixinClass.prototype.setSendData = function(){//根据选择设定消息
         var url = $("#url").val();
         if( url !== this.url ){
             if( url == "" || !this.verify.url.test(url) ){
@@ -83,15 +83,15 @@ var Weixin = (function($){
                 break;
          }
         return sendData;
-    };//}}}
+    };
 
-    WeixinClass.prototype.loadXml = function($xmlDoc,key){//{{{
+    WeixinClass.prototype.loadXml = function($xmlDoc,key){
         
         var a = $xmlDoc.last().find(key).text();
         return a;
-    };//}}}
+    };
     
-    WeixinClass.prototype.htmlEncode = function(s){//{{{
+    WeixinClass.prototype.htmlEncode = function(s){
         var reg = /"|&|'|<|>|[\x00-\x20]|[\x7F-\xFF]|[\u0100-\u2700]/g;
         return (typeof s != "string") ? s :s.replace(reg,
         function(a){
@@ -100,9 +100,9 @@ var Weixin = (function($){
             r.push(c); r.push(";");
             return r.join("");
         });
-    };//}}}
+    };
 
-    WeixinClass.prototype.pushInfo = function(statu,jqXHR){//状态信息详情推送//{{{
+    WeixinClass.prototype.pushInfo = function(statu,jqXHR){//状态信息详情推送
         var template = [];
         var date = new Date();
         var id = date.getTime();
@@ -127,19 +127,24 @@ var Weixin = (function($){
         result = template.join(''); 
         $tar.prepend( result );
         $cnt.text( ++this.msgCnt );
-    };//}}}
+    };
 
-    WeixinClass.prototype.getResponse = function(xmlData){//取得回传的数据进行处理//{{{
+    WeixinClass.prototype.getResponse = function(xmlData){//取得回传的数据进行处理
         var $xmlDoc = $(xmlData);
         switch( this.loadXml( $xmlDoc,'MsgType' ) ){
             case 'text':
                 this.pushMsgText( this.loadXml( $xmlDoc,'Content'),this.loadXml( $xmlDoc,'FromUserName') ,false);
                 break;
+            case 'news':
+                var $articles = $xmlDoc.find('Articles');
+
+                this.pushMsgNews( $articles,this.loadXml( $xmlDoc,'FromUserName') );
+                break;
         }
 
-    };//}}}
+    };
 
-    WeixinClass.prototype.pushMsgText = function(text,author,isSelf){//消息区推送,文本类//{{{
+    WeixinClass.prototype.pushMsgText = function(text,author,isSelf){//消息区推送,文本类
         var $tar = $("#msg-inner");
         var msg = "";
         if( isSelf ){
@@ -149,15 +154,57 @@ var Weixin = (function($){
                 "<div class='alert alert-info msg-content'>"+text+"</div></div>";
         }else{
             msg = "<div class='msg-wrapper-server'>"+
+                /*
                 "<span class='label label-default'>"+
                 author+"</span>"+
+                */
                 "<div class='alert alert-success msg-content'>"+text+"</div></div>";
         }
         $tar.append(msg);
         $tar.parent().scrollTop($tar.height()-340);//滚动到最底
-    };//}}}
+    };
+    
+    WeixinClass.prototype.pushMsgNews = function($news,author){//消息区推送,文本类
+        var $tar = $("#msg-inner");
+        var $items = $news.find('item');
+        if( $items.length <= 1 ){
+            var html = '<div class="panel panel-default news-single">'+
+                '<a href="' + $items.find('Url').text() + '" target="_blank">'+
+                '<div class="panel-body"><h4>'+
+                $items.find('Title').text() + '</h4>'+
+                '<img src="'+ $items.find('PicUrl').text() +'">'+
+                '<p class="text-muted">'+ $items.find('Description').text() + '</p>'+
+                '</div></a></div>';
+            var $rst = $(html);
 
-    WeixinClass.prototype.send = function( before,callback ){//发送信息//{{{
+        }else{
+            var $container = $('<div class="panel panel-default news-muti">'+
+                    '<div class="panel-body"></div>'+
+                    '<ul class="list-group"></ul></div>');
+            var $first = $items.first();
+            var $firstDom = $('<a href="'+ $first.find('Url').text() +'" target="_blank"><img src="' + $first.find('PicUrl').text() +'"><p>'+ $first.find('Title').text() +'</p></a>');
+            $container.find('.panel-body').append($firstDom);
+
+            for(var i=1;i<$items.length-1;i++){
+                var $item = $items.eq(i);
+                var $tmpDom = $('<li class="list-group-item">'+
+                        '<a href="' + $item.find('Url').text() + '" target="_blank">'+
+                        '<p>'+ $item.find('Title').text() +'</p>'+
+                        '<img src="' + $item.find('PicUrl').text() +'">'+
+                        '</a></li>');
+                $container.find('ul.list-group').append($tmpDom);
+            }
+            var $rst = $container;
+        }
+
+        var $wrap = $("<div class='msg-wrapper-server'><div class='row'>"+
+               "<div class='col-xs-8'><div class='news-content'></div></div></div></div>");
+        $wrap.find('.news-content').append($rst).end().appendTo($tar);
+
+        $tar.parent().scrollTop($tar.height());//滚动到最底
+    };
+
+    WeixinClass.prototype.send = function( before,callback ){//发送信息
         var sendData = this.setSendData();
         if( sendData === false ) return false;
 
@@ -195,7 +242,7 @@ var Weixin = (function($){
                   },
             complete:callback
         });
-    };//}}}
+    };
 
     return WeixinClass;
 }(jQuery));
