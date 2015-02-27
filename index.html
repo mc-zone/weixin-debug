@@ -3,8 +3,9 @@
     <head>
         <meta charset="UTF-8">
         <title>微信公众平台调试工具</title>
-        <link href="resource/bootstrap.min.css" rel="stylesheet">
-        <link href="css/style.css" rel="stylesheet">
+        <link href="styles/bootstrap.min.css" rel="stylesheet">
+        <link href="styles/style.css" rel="stylesheet">
+        <script type="text/javascript" data-main="scripts/application" src="lib/require.min.js"></script>
     </head>
     <body>
         <div class="container">
@@ -19,7 +20,7 @@
                                 <p class="lead">接口信息</p>
                             </td>
                             <td>
-                                <form class="form-inline" action="" role="form">
+                                <form id="form-api-info" class="form-inline" action="" role="form">
                                     <div style="padding-right:20px;" class="form-group">
                                         <label for="openID">帐号openID:</label>
                                         <input type="text" class="inline-input form-control" id="openID" placeholder="openID">
@@ -39,57 +40,24 @@
                             <td>
                                 <p class="lead">消息类型</p>
                             </td>
-                            <td>
-                                <div class="radio-inline">
-                                    <label>
-                                        <input id="" type="radio" name="msg-type" value="text" checked="checked">
-                                        文本 
-                                    </label>
-                                </div>
-                                <div class="radio-inline">
-                                    <label>
-                                        <input id="" type="radio" name="msg-type" value="subscribe">
-                                        订阅事件
-                                    </label>
-                                </div>
-                                <div class="radio-inline">
-                                    <label>
-                                        <input id="" type="radio" name="msg-type" value="location">
-                                        位置 
-                                    </label>
-                                </div>
-                                <div class="radio-inline">
-                                    <label>
-                                        <input id="" type="radio" name="msg-type" value="click">
-                                        click事件 
-                                    </label>
-                                </div>
-                                <div class="radio-inline">
-                                    <label>
-                                        <input id="" type="radio" name="msg-type" value="voice">
-                                        语音识别
-                                    </label>
-                                </div>
+                            <td >
+                                <form id="form-msg-type" class="form" action="" role="form">
+                                </form>
+
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <p class="lead">用户信息</p>
+                                <p class="lead">必要信息</p>
                             </td>
                             <td>
-                                <form class="form-inline" action="" role="form">
-                                        <div class="form-group">
-                                            <label for="userName">用户名:</label>
-                                            <input type="text" class="inline-input form-control" id="user-name" placeholder="User Name">
-                                        </div>
-                                        <div class="form-group location">
-                                            <label for="location-x">经度:</label>
-                                            <input type="text" class="inline-input form-control" id="location-x" placeholder="Longitude">
-                                        </div>
+                                <form id="form-msg-info" class="form-inline" action="" role="form">
+                                    <div class="col-xs-4">
                                         <div class="form-group location">
                                             <label for="location-y">纬度:</label>
                                             <input type="text" class="inline-input form-control" id="location-y" placeholder="Latitude">
                                         </div>
+                                    </div>
                                         <div class="form-group click">
                                             <label for="event-key">EventKey:</label>
                                             <input type="text" class="inline-input form-control" id="event-key" placeholder="EventKey">
@@ -164,83 +132,24 @@
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
 
-        <script type="text/javascript" src="resource/jquery-1.9.1.min.js"></script>
-        <script type="text/javascript" src="resource/bootstrap.min.js"></script>
-        <script type="text/javascript" src="resource/jquery.cookie.js"></script>
-        <script type="text/javascript" src="js/application.js"></script>
-        <script type="text/javascript">
-            var Wx = new Weixin();
-            $(function(){
-                    $("input[type='text']").each(function(){
-                        var $this = $(this); 
-                        var name = $this.attr('id') || $this.attr('name') || $this.index('input');
-                        if( $this.val() == "" ){
-                            $this.val( $.cookie(name) );
-                        }
 
-                        $this.change(function(){
-                            $.cookie(name,$(this).val());
-                        });
-                    });
-
-                    var $radio = $("input[type=radio][name=msg-type]");
-                    var typeSwitch = function(type){
-                        switch(type){
-                        case 'text':
-                        $("#content").removeAttr("disabled");
-                        $(".location").hide();
-                        $(".click").hide();
-                        $(".reco").hide();
-                        break;
-                        case 'subscribe':
-                        $("#content").attr("disabled","disabled");
-                        $(".location").hide();
-                        $(".click").hide();
-                        $(".reco").hide();
-                        break;
-                        case 'location':
-                        $("#content").attr("disabled","disabled");
-                        $(".location").show();
-                        $(".click").hide();
-                        $(".reco").hide();
-                        break;
-                        case 'click':
-                        $("#content").attr("disabled","disabled");
-                        $(".location").hide();
-                        $(".click").show();
-                        $(".reco").hide();
-                        break;
-                        case 'voice':
-                        $("#content").attr("disabled","disabled");
-                        $(".location").hide();
-                        $(".click").hide();
-                        $(".reco").show();
-                        break;
-                        }
-                    };
-                    $radio.change(function(){
-                        typeSwitch($(this).val());
-                        });
-                    $("#send").click(function(){
-                        var $btn = $(this);
-                        Wx.send(function(){
-                            $btn.addClass('disabled').text("等待..");
-                            }
-                            ,function(){
-                            $btn.removeClass('disabled').text(" 发 送 ");
-                            });
-                        });
-
-                    $("form").each(function(){
-                            $(this).submit(function(event){
-                                event.preventDefault();
-                                });
-                            });
-
-                    //初始设为text类型
-                    typeSwitch('text');
-            });
-
-        </script>
+    <!-- template begin -->
+    <script type="text/html" id="msg-type-field">
+    <div class="radio-inline">
+        <label>
+            <input type="radio" name="msg-type" value="{{type}}">
+            {{title}}
+        </label>
+    </div>
+    </script>
+    <script type="text/html" id="msg-info-field">
+    <div class="col-xs-3">
+        <div class="form-group">
+            <label for="{{id}}">{{title}}:</label>
+            <input type="text" class="inline-input form-control" id="{{id}}" name="{{name}}" placeholder="{{holder}}">
+        </div>
+    </div>
+    </script>
+    	
     </body>
 </html>

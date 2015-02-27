@@ -1,3 +1,134 @@
+requirejs.config({
+    baseUrl: "lib/",
+    paths: {
+        jquery:    "jquery-1.9.1.min",
+        bootstrap: "bootstrap.min",
+        cookie:    "jquery.cookie",
+        template:  "template",
+        domReady:  "domReady",
+    
+        WechatSpec: "../scripts/wechat-spec"
+    },
+     shim:{//插件自动加载
+          "bootstrap":["jquery"],
+          "cookie":["jquery"]
+     }
+});
+//调用依赖
+require(["jquery","template","domReady","WechatSpec","cookie","bootstrap"], function($,template,ready,WechatSpec) {
+    var $openID = $("#openID"), 
+        $url = $("#url"),
+        $token = $("#token"),
+        msgType = WechatSpec.msgType;
+    
+    //msg type choose insert
+    var $msgTypeForm = $("#form-msg-type"),
+        $msgTypeField = $("<div/>"),
+        $msgTypeChoose = null;
+
+    for(var i = 0, j = msgType.length; i < j; i++){
+        var group = msgType[i],
+            tpl = "";
+        for(var ii = 0, jj = group.length; ii < jj; ii++){
+            var item = group[ii],
+                field = template("msg-type-field",{
+                    type:item.name,
+                    title:item.title
+                });
+            tpl += field;
+        }
+        tpl = "<div class='form-group' >" + tpl + "</div>";
+        $msgTypeField.append(tpl);
+    }
+    $msgTypeField = $msgTypeField.children().appendTo($msgTypeForm);
+    $msgTypeChoose = $msgTypeField.find("input[type='radio'][name='msg-type']");
+
+    //type change bindding
+    $msgTypeChoose.change(function(e){
+        var tar = this,
+            type = this.value;
+        console.log(type);
+
+    }).triggerHandler("change");
+        
+    /*
+            var Wx = new Weixin();
+            $(function(){
+                    $("input[type='text']").each(function(){
+                        var $this = $(this); 
+                        var name = $this.attr('id') || $this.attr('name') || $this.index('input');
+                        if( $this.val() == "" ){
+                            $this.val( $.cookie(name) );
+                        }
+
+                        $this.change(function(){
+                            $.cookie(name,$(this).val());
+                        });
+                    });
+
+                    var $radio = $("input[type=radio][name=msg-type]");
+                    var typeSwitch = function(type){
+                        switch(type){
+                        case 'text':
+                        $("#content").removeAttr("disabled");
+                        $(".location").hide();
+                        $(".click").hide();
+                        $(".reco").hide();
+                        break;
+                        case 'subscribe':
+                        $("#content").attr("disabled","disabled");
+                        $(".location").hide();
+                        $(".click").hide();
+                        $(".reco").hide();
+                        break;
+                        case 'location':
+                        $("#content").attr("disabled","disabled");
+                        $(".location").show();
+                        $(".click").hide();
+                        $(".reco").hide();
+                        break;
+                        case 'click':
+                        $("#content").attr("disabled","disabled");
+                        $(".location").hide();
+                        $(".click").show();
+                        $(".reco").hide();
+                        break;
+                        case 'voice':
+                        $("#content").attr("disabled","disabled");
+                        $(".location").hide();
+                        $(".click").hide();
+                        $(".reco").show();
+                        break;
+                        }
+                    };
+                    $radio.change(function(){
+                        typeSwitch($(this).val());
+                        });
+                    $("#send").click(function(){
+                        var $btn = $(this);
+                        Wx.send(function(){
+                            $btn.addClass('disabled').text("等待..");
+                            }
+                            ,function(){
+                            $btn.removeClass('disabled').text(" 发 送 ");
+                            });
+                        });
+
+                    $("form").each(function(){
+                            $(this).submit(function(event){
+                                event.preventDefault();
+                                });
+                            });
+
+                    //初始设为text类型
+                    typeSwitch('text');
+            });
+*/
+
+
+});
+
+/*
 var Weixin = (function($){
     var WeixinClass = function(){
         this.verify = {
@@ -154,10 +285,8 @@ var Weixin = (function($){
                 "<div class='alert alert-info msg-content'>"+text+"</div></div>";
         }else{
             msg = "<div class='msg-wrapper-server'>"+
-                /*
-                "<span class='label label-default'>"+
-                author+"</span>"+
-                */
+                //"<span class='label label-default'>"+
+                //author+"</span>"+
                 "<div class='alert alert-success msg-content'>"+text+"</div></div>";
         }
         $tar.append(msg);
@@ -246,3 +375,4 @@ var Weixin = (function($){
 
     return WeixinClass;
 }(jQuery));
+*/
