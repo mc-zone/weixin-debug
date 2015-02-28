@@ -1,6 +1,7 @@
 <?php
 header("Content-Type:text/xml");
-$msgData = json_decode($_POST['data'],true);
+$ajaxData = json_decode($_POST['data'],true);
+$msgData = $ajaxData['data'];
 
 class Weixin{
     public function __construct($data){

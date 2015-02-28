@@ -23,15 +23,15 @@
                                 <form id="form-api-info" class="form-inline" action="" role="form">
                                     <div style="padding-right:20px;" class="form-group">
                                         <label for="openID">帐号openID:</label>
-                                        <input type="text" class="inline-input form-control" id="openID" placeholder="openID">
+                                        <input type="text" class="inline-input need-cache-input form-control" id="openID" placeholder="openID">
                                     </div>
                                     <div class="form-group">
                                         <label for="url">接口地址:</label>
-                                        <input type="text" class="inline-input form-control" id="url" placeholder="Site Url">
+                                        <input type="text" class="inline-input need-cache-input form-control" id="url" placeholder="Site Url">
                                     </div>
                                     <div class="form-group">
                                         <label for="token">Token:</label>
-                                        <input type="text" class="inline-input form-control" id="token" placeholder="Token">
+                                        <input type="text" class="inline-input need-cache-input form-control" id="token" placeholder="Token">
                                     </div>
                                 </form>
                             </td>
@@ -52,21 +52,7 @@
                             </td>
                             <td>
                                 <form id="form-msg-info" class="form-inline" action="" role="form">
-                                    <div class="col-xs-4">
-                                        <div class="form-group location">
-                                            <label for="location-y">纬度:</label>
-                                            <input type="text" class="inline-input form-control" id="location-y" placeholder="Latitude">
-                                        </div>
-                                    </div>
-                                        <div class="form-group click">
-                                            <label for="event-key">EventKey:</label>
-                                            <input type="text" class="inline-input form-control" id="event-key" placeholder="EventKey">
-                                        </div>
-
-                                        <div class="form-group reco">
-                                            <label for="Recognition">Recognition:</label>
-                                            <input type="text" class="inline-input form-control" id="Recognition" placeholder="Recognition">
-                                        </div>
+                                   
                                 </form>
                             </td>
                         </tr>
@@ -89,7 +75,7 @@
                                                 <form action="" class="form-inline" role="form">
                                                     <div class="form-group" style="width:85%;">
                                                         <label for="content" class="sr-only"></label>
-                                                        <input type="text" class="form-control" id="content"  placeholder="Message">
+                                                        <input type="text" class="form-control need-cache-input" id="content"  placeholder="Message">
                                                     </div>
                                                     <div class="form-group" style="width:12%; text-align:center;">
                                                         <label for="send" class="sr-only"></label>
@@ -134,19 +120,32 @@
 
 
     <!-- template begin -->
-    <script type="text/html" id="msg-type-field">
+    <script type="text/html" id="msg-type-radio">
     <div class="radio-inline">
         <label>
-            <input type="radio" name="msg-type" value="{{type}}">
+            <input type="radio" name="msg-type" value="{{type}}" {{if checked}}checked{{/if}} >
             {{title}}
         </label>
     </div>
     </script>
     <script type="text/html" id="msg-info-field">
-    <div class="col-xs-3">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
         <div class="form-group">
             <label for="{{id}}">{{title}}:</label>
-            <input type="text" class="inline-input form-control" id="{{id}}" name="{{name}}" placeholder="{{holder}}">
+            {{if type == 'text'}}
+                <input type="text" class="inline-input need-cache-input form-control" id="{{id}}" name="{{name}}" value="{{value}}" placeholder="{{holder}}" title="{{title}}" {{if required }}required{{/if}} >
+            {{else if type == 'radio'}}
+            <br>
+                <div class="form-group">
+                    {{each options as option idx}}
+                        <div class="radio-inline">
+                            <label>
+                            <input type="radio" name="{{name}}" value="{{option.value}}" title="{{title}}" {{if option.checked}}checked{{/if}} > {{option.title}}
+                            </label>
+                        </div>
+                    {{/each}}
+                </div>
+            {{/if}}
         </div>
     </div>
     </script>
