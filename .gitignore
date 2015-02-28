@@ -1,15 +1,15 @@
 #Grunt
-Gruntfile.js
-package.json
 node_modules/
 
 #vim
 *.sw*
+~*
 
 #doc
 *.key
 
 #Mac OS X
 .DS_Store
+__MACOS_X/
 
 

@@ -1,0 +1,26 @@
+{
+  "name": "weixin-debug",
+  "version": "0.1.1",
+  "description": "Wechat Web Debug Tools",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mc-zone/weixin-debug.git"
+  },
+  "keywords": [
+    "Wechat"
+  ],
+  "author": "mc-zone",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mc-zone/weixin-debug/issues"
+  },
+  "devDependencies": {
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-contrib-jshint": "~0.11.0",
+    "grunt-contrib-livereload": "~0.1.2"
+  }
+}
