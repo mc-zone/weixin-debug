@@ -3,8 +3,9 @@ define([],function(){
     var self = {};
 
     self.infoDefault = {
+        FromUserName:"weixin-debug",
         MediaId:"1234567890123456",
-        MsgId:"1234567890123456",
+        MsgId:1234567890123456,
         Location_X:"39.90923",
         Location_Y:"116.397428",
         PicMd5Sum:"e10adc3949ba59abbe56e057f20f883e"

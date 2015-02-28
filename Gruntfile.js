@@ -8,7 +8,7 @@ module.exports = function(grunt){
         },
 		jshint: {
             app:{
-                src: 'scripts/application.js'
+                src: 'scripts/*.js'
             }
 		}
 		
