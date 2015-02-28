@@ -4,7 +4,6 @@
 ###WeChat MP Debug Tool###
 
 
-
 ##说明##
 
 用于微信公众帐号外部接口(开发者模式)的功能及连通性测试。
@@ -12,17 +11,18 @@
 制作初衷为方便看到接口脚本运行有错误时的报错和返回消息。
 
 ##流程##
-根据消息类型，按照微信官方消息格式推送XML消息，处理返回信息并显示。
+根据消息类型，按照微信官方消息格式推送 XML 消息，处理返回信息并显示。
 
-1. 填写脚本Url和Token(验证时)
+1. 填写接口 url 和 token
 2. 选择消息类型，填写内容
-3. jQuery.Ajax发送消息到本地服务器端PHP脚本(Ajax无法跨域)
-4. 拼接微信官方XML消息格式curl post推送，获得回复后返回
+3. 拼接微信官方 XML 消息格式
+4. jQuery.Ajax + PHP 脚本(方便跨域)推送到接口，获得回复后返回
 5. 前端根据返回消息情况进行处理
 
 
 ##流程图##
-![image](https://raw.github.com/mc-zone/weixin-debug/master/flowChart.png) 
+![image](https://raw.github.com/mc-zone/weixin-debug/master/files/flowChart.png) 
 
 ##注意##
-项目脱离了微信服务器中间转发的过程，无法求证从接口到微信服务器的连通性。
+项目模拟微信服务器中间转发的过程，只检查接口状态和返回格式的正确性，不能求证从接口到微信服务器的连通性。
+
