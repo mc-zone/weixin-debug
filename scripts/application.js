@@ -5,7 +5,7 @@ requirejs.config({
         bootstrap: "bootstrap.min",
         template:  "template",
         domReady:  "domReady",
-    
+
         formData: "../scripts/form-data",
         receiveHandler: "../scripts/receive-handler"
     },
@@ -15,9 +15,10 @@ requirejs.config({
 });
 //调用依赖
 require(["jquery","template","domReady","formData","receiveHandler","bootstrap"], function($,template,ready,formData,receiveHandler) {
-    var $openID = $("#openID"), 
+    var $openID = $("#openID"),
         $url = $("#url"),
         $token = $("#token"),
+        $fromUser = $("#fromUser"),
         $textInput = $("#content"),
         $sendBtn = $("#send"),
         $modal = $("#myModal"),
@@ -30,7 +31,7 @@ require(["jquery","template","domReady","formData","receiveHandler","bootstrap"]
         proxyUrl = "server-proxy/weixin-debug-proxy.php",
         //cacheTimeId = -1,
         curType = '';
-    
+
     //valueCache init
     //TODO 优化更新机制
     if(window.localStorage){
@@ -231,7 +232,7 @@ require(["jquery","template","domReady","formData","receiveHandler","bootstrap"]
         if( data.MsgType == "event" ){
             data.Event = type;
         }
-        data.FromUserName = formData.infoDefault.FromUserName;
+        data.FromUserName = $fromUser.val() === "" ? formData.infoDefault.FromUserName : $fromUser.val();
         data.CreateTime = parseInt( ( +new Date() ).toString().substr(0,10) , 10 );
         data.MsgId = formData.infoDefault.MsgId;
 
@@ -239,6 +240,7 @@ require(["jquery","template","domReady","formData","receiveHandler","bootstrap"]
         data = $.extend(data,{},enterData);
         //特殊处理
         specialTypeHandle(data,type);
+        console.log(data);
         return data;
     }
 
@@ -291,12 +293,12 @@ require(["jquery","template","domReady","formData","receiveHandler","bootstrap"]
         $modal.modal('show');
         return false;
     }
-        
+
     /*
             var Wx = new Weixin();
             $(function(){
                     $("input[type='text']").each(function(){
-                        var $this = $(this); 
+                        var $this = $(this);
                         var name = $this.attr('id') || $this.attr('name') || $this.index('input');
                         if( $this.val() == "" ){
                             $this.val( $.cookie(name) );
